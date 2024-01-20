@@ -81,3 +81,4 @@ prozent = (benutzer.punktzahl/13)*100
 print("Von 100% hast du  " , prozent , "% richtig")
 
 
+#Test
