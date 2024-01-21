@@ -18,6 +18,15 @@ class WahlfalschFrage(Frage):                                         #Neue Klas
         super().__init__(frage_id, frage_text, antwort, "", "")       #Alle definierten Parameter übernehmen. Tipp1&2 bleiben leer.
 #Vorherigen Konstuktor aufrufen. Funktion "Vererben" hinzugefügt
 
+# Neue Klasse für Multiple-Choice-Fragen mit Vererbung
+class MultipleChoiceFrage(Frage):
+    def __init__(self, frage_id, frage_text, antwort, optionen):  # Konstruktor hat vier Parameter
+        # Die Attribute vererben
+        super().__init__(frage_id, frage_text, antwort, "", "")
+        self.optionen = optionen  # Zusätzliches Attribut für die Antwortoptionen
+
+
+
 #Fragenauflistung mit Daten:
         
 fragen = [
@@ -34,5 +43,8 @@ fragen = [
     WahlfalschFrage(20, "Stimmt spielen=play?", "w"),
     WahlfalschFrage(21, "Stimmt fahren=dive?", "f"),
     WahlfalschFrage(22, "Stimmt fliegen=fly?", "w"),
+    MultipleChoiceFrage(23, "Was ist die Hauptstadt von Frankreich?", "paris", ["a) Berlin", "b) Paris", "c) Rio", "d) Marseille"]),
+    MultipleChoiceFrage(24, "Was ist die Hauptstadt von Brasilien?", "brasilia", ["a) Rio", "b) Brasilia", "c) Sao Paolo", "d) Neapel"]),
+    MultipleChoiceFrage(25, "Was ist die Hauptstadt von Thailand?", "bangkok", ["a) Phuket", "b) Kuala Lumpur", "c) Jakarta", "d) Bangkok"]),
     # Weitere Fragen können hier hinzugefügt werden, Datenpool
 ]
