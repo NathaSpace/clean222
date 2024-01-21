@@ -1,3 +1,19 @@
+import sqlite3
+
+# Verbindung zur Datenbank herstellen (wenn die Datei nicht vorhanden ist, wird sie erstellt)
+connection = sqlite3.connect('benutzerdaten.db')
+cursor = connection.cursor()
+
+# Tabelle erstellen, wenn sie nicht existiert
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS benutzer (
+        benutzername TEXT PRIMARY KEY,
+        punktzahl REAL
+    )
+''')
+connection.commit()
+
+
 # Das Importieren der Fragenarten aus der Fragen-Klasse
 from fragen import fragen, WahlfalschFrage, MultipleChoiceFrage
 
@@ -95,3 +111,20 @@ prozent = (benutzer.punktzahl / len(alle_frage_ids)) * 100 #len neu eingefügt: 
 # Das Ergebnis wird im angezeigten Text angezeigt mit str(punkte)
 print("Von 100% hast du ", prozent, "% richtig")
 
+
+
+
+cursor.execute('''
+    INSERT OR REPLACE INTO benutzer (benutzername, punktzahl) VALUES (?, ?)
+''', (benutzer.benutzername, benutzer.punktzahl))
+connection.commit()
+
+
+# Benutzerdaten am Ende anzeigen, sortiert nach höchster Punktzahl
+print("Benutzerdaten:")
+for row in cursor.execute('SELECT * FROM benutzer ORDER BY punktzahl DESC'):
+    print(f"{row[0]} - Punktzahl: {row[1]}")
+
+
+
+connection.close()
