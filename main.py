@@ -41,7 +41,7 @@ print("Los gehts!")
 benutzername = input("Gib deinen Benutzernamen ein: ")
 benutzer = Benutzer(benutzername)
 
-# Die random Reihenfolge abfragen
+#   Die random Reihenfolge abfragen
 for frage_id in alle_frage_ids:
 
     # Die aktuelle Fragen-ID abfragen
@@ -126,5 +126,21 @@ for row in cursor.execute('SELECT * FROM benutzer ORDER BY punktzahl DESC'):
     print(f"{row[0]} - Punktzahl: {row[1]}")
 
 
+
+connection.close()
+
+
+def reset_database():
+    confirm = input("Möchtest du die Datenbank wirklich zurücksetzen? (ja/nein): ")
+    if confirm.lower() == 'ja':
+        cursor.execute('DELETE FROM benutzer')  # Löscht alle Datensätze in der Tabelle
+        connection.commit()
+        print("Datenbank wurde erfolgreich zurückgesetzt.")
+    else:
+        print("Nicht zurückgesetzt.")
+
+
+# Füge diese Zeile am Ende des Programms hinzu, um die Funktion aufzurufen
+reset_database()
 
 connection.close()
