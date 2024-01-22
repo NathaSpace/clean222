@@ -42,105 +42,118 @@ benutzername = input("Gib deinen Benutzernamen ein: ")
 benutzer = Benutzer(benutzername)
 
 #   Die random Reihenfolge abfragen
-for frage_id in alle_frage_ids:
+while True:
 
-    # Die aktuelle Fragen-ID abfragen
-    aktuelle_frage = next((frage for frage in fragen if frage.frage_id == frage_id), None)
+    # Gesamten Punktestand des Benutzers auf 0 setzen
+    benutzer.punktzahl = 0
 
-    # Aktuelle Frage finden
-    if aktuelle_frage:
-        if isinstance(aktuelle_frage, MultipleChoiceFrage):
-            # Anzeige der Multiple-Choice-Frage
-            print(f"Fragetext: {aktuelle_frage.frage_text}")
-            for option in aktuelle_frage.optionen:
-                print(option)
-            benutzerantwort = input("Deine Antwort: ")
+    for frage_id in alle_frage_ids:
 
-            if benutzerantwort.lower() == aktuelle_frage.antwort.lower():
-                print("Richtig!")
-                benutzer.punkt_hinzufuegen(1)
-            else:
-                print("Falsch!")
+        # Die aktuelle Fragen-ID abfragen
+        aktuelle_frage = next((frage for frage in fragen if frage.frage_id == frage_id), None)
 
-        else:
-            # Anzeige der normalen Frage
-            print(f"Fragetext: {aktuelle_frage.frage_text}")
-            benutzerantwort = input("Deine Antwort: ")
 
-            if isinstance(aktuelle_frage, WahlfalschFrage):
-                # Bei Wahr-Falsch-Fragen direkt zur nächsten Frage
-                if benutzerantwort.lower() == aktuelle_frage.antwort.lower():
-                    print("Richtig!")
-                    benutzer.punkt_hinzufuegen(1)  # Punkt für richtige Antwort auf Wahr-Falsch-Frage
-                else:
-                    print("Falsch!")
-                continue
-            print()  # Leerzeile
-
-            # Fragen Ablauf
-            if benutzerantwort.lower() == aktuelle_frage.antwort.lower():
-                print("Richtig!")
-                benutzer.punkt_hinzufuegen(1)
-            else:
-                print("Falsch!")
-                print(f"Tipp1: {aktuelle_frage.tipp1}")
+        # Aktuelle Frage finden
+        if aktuelle_frage:
+            if isinstance(aktuelle_frage, MultipleChoiceFrage):
+                # Anzeige der Multiple-Choice-Frage
+                print(f"Fragetext: {aktuelle_frage.frage_text}")
+                for option in aktuelle_frage.optionen:
+                    print(option)
                 benutzerantwort = input("Deine Antwort: ")
 
                 if benutzerantwort.lower() == aktuelle_frage.antwort.lower():
                     print("Richtig!")
-                    benutzer.punkt_hinzufuegen(0.5)
+                    benutzer.punkt_hinzufuegen(1)
                 else:
-                    print("Leider wieder falsch!")
-                    print(f"Tipp2: {aktuelle_frage.tipp2}")
+                    print("Falsch!")
+
+            else:
+                # Anzeige der normalen Frage
+                print(f"Fragetext: {aktuelle_frage.frage_text}")
+                benutzerantwort = input("Deine Antwort: ")
+
+                if isinstance(aktuelle_frage, WahlfalschFrage):
+                    # Bei Wahr-Falsch-Fragen direkt zur nächsten Frage
+                    if benutzerantwort.lower() == aktuelle_frage.antwort.lower():
+                        print("Richtig!")
+                        benutzer.punkt_hinzufuegen(1)  # Punkt für richtige Antwort auf Wahr-Falsch-Frage
+                    else:
+                        print("Falsch!")
+                    continue
+                print()  # Leerzeile
+
+                # Fragen Ablauf
+                if benutzerantwort.lower() == aktuelle_frage.antwort.lower():
+                    print("Richtig!")
+                    benutzer.punkt_hinzufuegen(1)
+                else:
+                    print("Falsch!")
+                    print(f"Tipp1: {aktuelle_frage.tipp1}")
                     benutzerantwort = input("Deine Antwort: ")
 
                     if benutzerantwort.lower() == aktuelle_frage.antwort.lower():
                         print("Richtig!")
+                        benutzer.punkt_hinzufuegen(0.5)
                     else:
-                        print("Leider wieder falsch! Nächste Frage.")
-            print()  # Leerzeile
+                        print("Leider wieder falsch!")
+                        print(f"Tipp2: {aktuelle_frage.tipp2}")
+                        benutzerantwort = input("Deine Antwort: ")
 
-# Punktestand des Benutzers anzeigen
-print(f"{benutzer.benutzername} hat insgesamt {benutzer.punktzahl} Punkt(e) erreicht.")
+                        if benutzerantwort.lower() == aktuelle_frage.antwort.lower():
+                            print("Richtig!")
+                        else:
+                            print("Leider wieder falsch! Nächste Frage.")
+                print()  # Leerzeile
 
-# Quelle: Letzte Projektarbeit
-# Mathematische Operation der Punkte in Prozentzahl
-# Die gesammelten Punkte, also die Summe wird durch die Anzahl der Fragen dividiert und mit *100 multipliziert
-prozent = (benutzer.punktzahl / len(alle_frage_ids)) * 100 #len neu eingefügt: Gesamtzahl aller Fragen
+    # Punktestand des Benutzers anzeigen
+    print(f"{benutzer.benutzername} hat insgesamt {benutzer.punktzahl} Punkt(e) erreicht.")
 
-# Das Ergebnis wird im angezeigten Text angezeigt mit str(punkte)
-print("Von 100% hast du ", prozent, "% richtig")
+    # Quelle: Letzte Projektarbeit
+    # Mathematische Operation der Punkte in Prozentzahl
+    # Die gesammelten Punkte, also die Summe wird durch die Anzahl der Fragen dividiert und mit *100 multipliziert
+    prozent = (benutzer.punktzahl / len(alle_frage_ids)) * 100 #len neu eingefügt: Gesamtzahl aller Fragen
 
-
-
-
-cursor.execute('''
-    INSERT OR REPLACE INTO benutzer (benutzername, punktzahl) VALUES (?, ?)
-''', (benutzer.benutzername, benutzer.punktzahl))
-connection.commit()
-
-
-# Benutzerdaten am Ende anzeigen, sortiert nach höchster Punktzahl
-print("Benutzerdaten:")
-for row in cursor.execute('SELECT * FROM benutzer ORDER BY punktzahl DESC'):
-    print(f"{row[0]} - Punktzahl: {row[1]}")
+    # Das Ergebnis wird im angezeigten Text angezeigt mit str(punkte)
+    print("Von 100% hast du ", prozent, "% richtig")
 
 
 
-connection.close()
+
+    cursor.execute('''
+        INSERT OR REPLACE INTO benutzer (benutzername, punktzahl) VALUES (?, ?)
+    ''', (benutzer.benutzername, benutzer.punktzahl))
+    connection.commit()
 
 
-def reset_database():
-    confirm = input("Möchtest du die Datenbank wirklich zurücksetzen? (ja/nein): ")
-    if confirm.lower() == 'ja':
-        cursor.execute('DELETE FROM benutzer')  # Löscht alle Datensätze in der Tabelle
-        connection.commit()
-        print("Datenbank wurde erfolgreich zurückgesetzt.")
-    else:
-        print("Nicht zurückgesetzt.")
+    # Benutzerdaten am Ende anzeigen, sortiert nach höchster Punktzahl
+    print("Benutzerdaten:")
+    for row in cursor.execute('SELECT * FROM benutzer ORDER BY punktzahl DESC'):
+        print(f"{row[0]} - Punktzahl: {row[1]}")
 
 
-# Füge diese Zeile am Ende des Programms hinzu, um die Funktion aufzurufen
-reset_database()
 
+    
+
+
+    def reset_database():
+        confirm = input("Möchtest du die Datenbank wirklich zurücksetzen? (ja/nein): ")
+        if confirm.lower() == 'ja':
+            cursor.execute('DELETE FROM benutzer')  # Löscht alle Datensätze in der Tabelle
+            connection.commit()
+            print("Datenbank wurde erfolgreich zurückgesetzt.")
+        else:
+            print("Nicht zurückgesetzt.")
+
+
+    # Füge diese Zeile am Ende des Programms hinzu, um die Funktion aufzurufen
+    reset_database()
+
+    # Abfrage, ob erneut gespielt werden soll
+    erneut_spielen = input("Möchtest du das Quiz erneut spielen? (ja/nein): ")
+    if erneut_spielen.lower() != 'ja':
+        print("Auf Wiedersehen!")
+        break  # Beende die Endlosschleife, wenn der Benutzer "nein" eingibt
+
+# Datenbankverbindung schließen
 connection.close()
