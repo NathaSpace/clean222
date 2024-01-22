@@ -1,6 +1,5 @@
-import sqlite3
+import sqlite3                                                      #Importiert SQlite Modul. Verbindung zur Datenbank herstellen (wenn Datei nicht vorhanden, erstellen)
 
-# Verbindung zur Datenbank herstellen (wenn die Datei nicht vorhanden ist, wird sie erstellt)
 connection = sqlite3.connect('benutzerdaten.db')
 cursor = connection.cursor()
 
@@ -116,8 +115,6 @@ while True:
 
     # Das Ergebnis wird im angezeigten Text angezeigt mit str(punkte)
     print("Von 100% hast du ", prozent, "% richtig")
-
-
 
 
     cursor.execute('''

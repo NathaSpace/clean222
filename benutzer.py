@@ -1,4 +1,4 @@
-#Benutzerklasse mit Punktestand
+#Benutzerklasse mit Punktestand-Funktionen
 
 class Benutzer:                             #Klasse des Benutzers
     def __init__(self, benutzername):       #Benutzer hat den Konstruktor __init__ mit einem Parameter
